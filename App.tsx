@@ -4,6 +4,7 @@ import { ReceiptItem, ExpenseCategory, ViewState, ScanResult } from './types';
 import { CameraIcon, PlusIcon, ChevronLeftIcon, TrashIcon, ReceiptIcon } from './components/Icons';
 import ReceiptCard from './components/ReceiptCard';
 import ExportTools from './components/ExportTools';
+import { IOSInstallPrompt } from './components/IOSInstallPrompt';
 
 const App: React.FC = () => {
   // State
@@ -128,8 +129,8 @@ const App: React.FC = () => {
 
   const renderList = () => (
     <div className="flex flex-col h-full relative">
-      <header className="px-6 pt-12 pb-6 bg-white shadow-sm z-10">
-        <div className="flex justify-between items-start mb-4">
+      <header className="px-6 pt-safe-top pb-6 bg-white shadow-sm z-10 sticky top-0">
+        <div className="flex justify-between items-start mb-4 pt-4">
             <div>
                 <h1 className="text-2xl font-bold text-gray-900">SnapSpend</h1>
                 <p className="text-gray-500 text-sm">Track your expenses</p>
@@ -165,7 +166,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Floating Action Button */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center z-20">
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center z-20 pb-safe-bottom">
         <button 
             onClick={handleScanClick}
             className="w-16 h-16 bg-blue-600 rounded-full text-white shadow-xl flex items-center justify-center hover:scale-105 transition-transform active:scale-95"
@@ -185,7 +186,7 @@ const App: React.FC = () => {
   );
 
   const renderProcessing = () => (
-    <div className="flex flex-col items-center justify-center h-full bg-white p-8 text-center">
+    <div className="flex flex-col items-center justify-center h-full bg-white p-8 text-center pt-safe-top">
       <div className="animate-pulse w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-8">
         <CameraIcon className="w-10 h-10 text-blue-500" />
       </div>
@@ -197,8 +198,8 @@ const App: React.FC = () => {
   const renderEditOrDetails = (isReadOnly: boolean) => {
     const isEditing = !isReadOnly;
     return (
-      <div className="flex flex-col h-full bg-gray-50">
-        <header className="bg-white px-4 py-4 flex items-center justify-between shadow-sm sticky top-0 z-10 pt-12">
+      <div className="flex flex-col h-full bg-gray-50 pt-safe-top">
+        <header className="bg-white px-4 py-4 flex items-center justify-between shadow-sm sticky top-0 z-10">
             <button 
                 onClick={() => setView('LIST')} 
                 className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-full"
@@ -218,7 +219,7 @@ const App: React.FC = () => {
             )}
         </header>
 
-        <div className="flex-1 overflow-y-auto p-6 no-scrollbar">
+        <div className="flex-1 overflow-y-auto p-6 no-scrollbar pb-safe-bottom">
             {currentReceipt.imageBase64 && (
                 <div className="mb-6 rounded-xl overflow-hidden shadow-sm border border-gray-200 bg-white">
                     <img src={currentReceipt.imageBase64} alt="Receipt Preview" className="w-full max-h-80 object-contain bg-gray-900" />
@@ -305,7 +306,7 @@ const App: React.FC = () => {
         </div>
 
         {isEditing ? (
-            <div className="p-6 bg-white border-t border-gray-100 safe-area-bottom">
+            <div className="p-6 bg-white border-t border-gray-100 pb-safe-bottom">
                 <button 
                     type="submit" 
                     form="receipt-form"
@@ -315,7 +316,7 @@ const App: React.FC = () => {
                 </button>
             </div>
         ) : (
-            <div className="p-6 bg-white border-t border-gray-100 safe-area-bottom flex gap-3">
+            <div className="p-6 bg-white border-t border-gray-100 pb-safe-bottom flex gap-3">
                  <button 
                     onClick={() => setView('EDIT')}
                     className="flex-1 bg-gray-100 text-gray-700 font-semibold py-4 rounded-xl hover:bg-gray-200 transition-colors"
@@ -335,11 +336,20 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto h-screen bg-gray-50 overflow-hidden text-gray-900 font-sans shadow-2xl">
+    // Use h-[100dvh] for mobile browser support (address bar handling)
+    <div className="max-w-md mx-auto h-[100dvh] bg-gray-50 overflow-hidden text-gray-900 font-sans shadow-2xl relative">
+      <style>{`
+        .pt-safe-top { padding-top: env(safe-area-inset-top); }
+        .pb-safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+      `}</style>
+      
       {view === 'LIST' && renderList()}
       {view === 'SCAN' && renderProcessing()}
       {view === 'EDIT' && renderEditOrDetails(false)}
       {view === 'DETAILS' && renderEditOrDetails(true)}
+      
+      {/* iOS Install Prompt */}
+      {view === 'LIST' && <IOSInstallPrompt />}
     </div>
   );
 };
