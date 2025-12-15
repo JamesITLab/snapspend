@@ -6,7 +6,8 @@
     <title>SnapSpend</title>
     
     <!-- PWA Settings -->
-    <link rel="manifest" href="/manifest.json" />
+    <!-- Removed leading slash to make path relative for GitHub Pages sub-folder -->
+    <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -33,22 +34,11 @@
         padding-bottom: env(safe-area-inset-bottom);
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-    "vite": "https://esm.sh/vite@^7.2.7",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "vite-plugin-static-copy": "https://esm.sh/vite-plugin-static-copy@^3.1.4"
-  }
-}
-</script>
-</head>
+    <!-- CRITICAL FIX: Removed <script type="importmap">. It conflicts with Vite build. -->
+  </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <!-- CRITICAL FIX: Changed src="/index.tsx" to "./index.tsx" for relative path resolution -->
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
