@@ -2,7 +2,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { ExpenseCategory, ScanResult } from "../types";
 
 // Prevent TypeScript build error for process.env
-// We declare it simply to satisfy the compiler when it parses this file
 declare const process: {
   env: {
     API_KEY: string;
@@ -10,16 +9,15 @@ declare const process: {
 };
 
 const parseReceiptImage = async (base64Image: string, mimeType: string): Promise<ScanResult> => {
-  // Accessing process.env.API_KEY directly. 
-  // Vite's 'define' plugin will replace 'process.env.API_KEY' with the actual string literal during build.
+  // Vite replaces process.env.API_KEY with the actual string during build.
+  // We check for its existence to provide a helpful error if the build secret was missing.
   if (!process.env.API_KEY) {
-    throw new Error("API Key is missing.");
+    console.error("API Key is missing. Please check your GitHub Secrets and build configuration.");
+    throw new Error("API configuration error. Key not found.");
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-  // We remove the explicit ': Schema' type annotation to avoid build errors if the type is not exported.
-  // The structure matches what the API expects.
   const schema = {
     type: Type.OBJECT,
     properties: {
