@@ -1,0 +1,7 @@
+{
+  "name": "SnapSpend",
+  "description": "A mobile-first receipt scanner and expense tracker powered by Gemini.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
