@@ -6,11 +6,11 @@
     <title>SnapSpend</title>
     
     <!-- PWA Settings -->
-    <!-- Removed leading slash to make path relative for GitHub Pages sub-folder -->
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Changed to 'default' so status bar text is black (visible on white background) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="SnapSpend" />
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2921/2921226.png" />
 
@@ -29,16 +29,29 @@
       body {
         background-color: #f3f4f6;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        /* Handle iPhone Notch/Dynamic Island */
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
+        /* Disable text selection for native app feel */
+        -webkit-user-select: none;
+        user-select: none;
+        /* Remove tap highlight color */
+        -webkit-tap-highlight-color: transparent;
       }
     </style>
-    <!-- CRITICAL FIX: Removed <script type="importmap">. It conflicts with Vite build. -->
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "vite": "https://esm.sh/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "vite-plugin-static-copy": "https://esm.sh/vite-plugin-static-copy@^3.1.4"
+  }
+}
+</script>
+</head>
   <body>
     <div id="root"></div>
-    <!-- CRITICAL FIX: Changed src="/index.tsx" to "./index.tsx" for relative path resolution -->
     <script type="module" src="./index.tsx"></script>
   </body>
 </html>
